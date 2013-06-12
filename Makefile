@@ -352,6 +352,9 @@ MODFLAGS        = -DMODULE \
 		  -mfpu=neon-vfpv4 \
 		  -mtune=cortex-a15 \
 		  -Os
+ifdef CONFIG_GCC_48_FIXES
+  MODFLAGS        += -fno-aggressive-loop-optimizations
+endif
 CFLAGS_MODULE   = $(MODFLAGS)
 AFLAGS_MODULE   = $(MODFLAGS)
 LDFLAGS_MODULE  = -T $(srctree)/scripts/module-common.lds
@@ -359,6 +362,9 @@ CFLAGS_KERNEL	= -march=armv7-a \
 		  -mfpu=neon-vfpv4 \
 		  -mtune=cortex-a15 \
 		  -Os
+ifdef CONFIG_GCC_48_FIXES
+  CFLAGS_KERNEL   += -fno-aggressive-loop-optimizations
+endif
 AFLAGS_KERNEL	=
 CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
 
@@ -371,12 +377,18 @@ LINUXINCLUDE    := -I$(srctree)/arch/$(hdr-arch)/include \
                    -include $(srctree)/include/linux/kconfig.h
 
 KBUILD_CPPFLAGS := -D__KERNEL__
+ifdef CONFIG_GCC_48_FIXES
+  KBUILD_CPPFLAGS += -fno-aggressive-loop-optimizations
+endif
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -fno-strict-aliasing -fno-common \
 		   -Werror-implicit-function-declaration \
 		   -Wno-format-security \
 		   -fno-delete-null-pointer-checks
+ifdef CONFIG_GCC_48_FIXES
+  KBUILD_CFLAGS   += -fno-aggressive-loop-optimizations
+endif
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
 KBUILD_AFLAGS   := -D__ASSEMBLY__
@@ -602,6 +614,9 @@ endif
 
 ifdef CONFIG_DEBUG_INFO
 KBUILD_CFLAGS	+= -g
+ifdef CONFIG_GCC_48_FIXES
+KBUILD_CFLAGS	+= -gdwarf-2
+endif
 KBUILD_AFLAGS	+= -gdwarf-2
 endif
 

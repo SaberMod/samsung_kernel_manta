@@ -939,6 +939,16 @@ source "usr/Kconfig"
 
 endif
 
+config GCC_48_FIXES
+	bool "Implement gcc-4.8 fixes (EXPERIMENTAL)"
+	default n
+	help
+	  gcc 4.8 added a new flag -fagressive-loop-optimizations
+	  This can be unstable on some kernels.  Enabling this option will
+	  will disable it at many levels.
+
+	  If unsure, say N.
+
 config CC_OPTIMIZE_FOR_SIZE
 	bool "Optimize for size"
 	help
