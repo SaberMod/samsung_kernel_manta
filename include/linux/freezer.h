@@ -43,11 +43,12 @@ extern void thaw_processes(void);
 extern void thaw_kernel_threads(void);
 
 /*
- * HACK: prevent sleeping while atomic warnings due to ARM signal handling
- * disabling irqs
+ * DO NOT ADD ANY NEW CALLERS OF THIS FUNCTION
+ * If try_to_freeze causes a lockdep warning it means the caller may deadlock
  */
-static inline bool try_to_freeze_nowarn(void)
+static inline bool try_to_freeze_unsafe(void)
 {
+	might_sleep();
 	if (likely(!freezing(current)))
 		return false;
 	return __refrigerator(false);
@@ -59,10 +60,9 @@ static inline bool try_to_freeze_nowarn(void)
  */
 static inline bool try_to_freeze_unsafe(void)
 {
-	might_sleep();
-	if (likely(!freezing(current)))
-		return false;
-	return __refrigerator(false);
+	if (!(current->flags & PF_NOFREEZE))
+		debug_check_no_locks_held();
+	return try_to_freeze_unsafe();
 }
 
 static inline bool try_to_freeze(void)

@@ -141,8 +141,10 @@ static int kbase_dump_cpu_gpu_time(kbase_jd_atom *katom)
  */
 static void complete_soft_job(kbase_jd_atom *katom)
 {
+	int err;
 	kbase_context *kctx = katom->kctx;
 
+	kbasep_list_trace_add(15, kctx->kbdev, katom, &kctx->waiting_soft_jobs, KBASE_TRACE_LIST_DEL, KBASE_TRACE_LIST_WAITING_SOFT_JOBS);
 	mutex_lock(&kctx->jctx.lock);
 	list_del(&katom->dep_item[0]);
 	kbase_finish_soft_job(katom);

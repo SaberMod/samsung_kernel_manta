@@ -88,7 +88,7 @@ static struct page *alloc_buffer_page(struct ion_system_heap *heap,
 
 static void free_buffer_page(struct ion_system_heap *heap,
 			     struct ion_buffer *buffer, struct page *page,
-			     unsigned int order)
+			     unsigned int order, struct vm_struct *vm_struct)
 {
 	bool cached = ion_buffer_cached(buffer);
 	bool split_pages = ion_buffer_fault_user_mappings(buffer);
@@ -183,10 +183,13 @@ static int ion_system_heap_allocate(struct ion_heap *heap,
 err1:
 	kfree(table);
 err:
+	vm_struct = get_vm_area(PAGE_SIZE, &ptes);
 	list_for_each_entry(info, &pages, list) {
-		free_buffer_page(sys_heap, buffer, info->page, info->order);
+		free_buffer_page(sys_heap, buffer, info->page, info->order,
+				vm_struct);
 		kfree(info);
 	}
+	free_vm_area(vm_struct);
 	return -ENOMEM;
 }
 
@@ -200,6 +203,8 @@ void ion_system_heap_free(struct ion_buffer *buffer)
 	bool cached = ion_buffer_cached(buffer);
 	struct scatterlist *sg;
 	LIST_HEAD(pages);
+	struct vm_struct *vm_struct;
+	pte_t *ptes;
 	int i;
 
 	/* uncached pages come from the page pools, zero them before returning

@@ -1238,6 +1238,7 @@ void kbasep_js_policy_runpool_remove_ctx(kbasep_js_policy *js_policy, kbase_cont
 	/* No searching or significant list maintenance required to remove this context */
 	list_del(&kctx->jctx.sched_info.runpool.policy_ctx.cfs.list);
 
+
 }
 
 mali_bool kbasep_js_policy_should_remove_ctx(kbasep_js_policy *js_policy, kbase_context *kctx)

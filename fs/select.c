@@ -27,7 +27,6 @@
 #include <linux/rcupdate.h>
 #include <linux/hrtimer.h>
 #include <linux/freezer.h>
-
 #include <asm/uaccess.h>
 
 

@@ -22,6 +22,8 @@
 #ifndef _KBASE_DEFS_H_
 #define _KBASE_DEFS_H_
 
+#define KBASE_LIST_TRACE_ENABLE 1
+
 #include <kbase/mali_kbase_config.h>
 #include <kbase/mali_base_hwconfig.h>
 #include <kbase/src/common/mali_kbase_mem_lowlevel.h>
@@ -146,6 +148,8 @@ typedef struct kbase_device kbase_device;
 #define KBASE_TRACE_SIZE_LOG2 8	/* 256 entries */
 #define KBASE_TRACE_SIZE (1 << KBASE_TRACE_SIZE_LOG2)
 #define KBASE_TRACE_MASK ((1 << KBASE_TRACE_SIZE_LOG2)-1)
+
+#define KBASE_LIST_TRACE_SIZE (1 << KBASE_TRACE_SIZE_LOG2)
 
 #include "mali_kbase_js_defs.h"
 
@@ -587,6 +591,12 @@ struct kbase_device {
 	u16                     trace_first_out;
 	u16                     trace_next_in;
 	kbase_trace            *trace_rbuf;
+#endif
+#if KBASE_LIST_TRACE_ENABLE != 0
+	spinlock_t              trace_lists_lock;
+	u16                     trace_lists_first_out;
+	u16                     trace_lists_next_in;
+	kbase_list_trace	   *trace_lists_rbuf;
 #endif
 
 #if MALI_CUSTOMER_RELEASE == 0

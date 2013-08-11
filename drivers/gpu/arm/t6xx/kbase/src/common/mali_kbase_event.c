@@ -53,6 +53,8 @@ KBASE_EXPORT_TEST_API(kbase_event_pending)
 int kbase_event_dequeue(kbase_context *ctx, base_jd_event_v2 *uevent)
 {
 	kbase_jd_atom *atom;
+	kbase_jd_atom *trace_atom;
+	int err;
 
 	KBASE_DEBUG_ASSERT(ctx);
 
@@ -104,6 +106,7 @@ static void kbase_event_post_worker(struct work_struct *data)
 		}
 	}
 
+	kbasep_list_trace_add(1, ctx->kbdev, atom, &ctx->event_list, KBASE_TRACE_LIST_ADD, KBASE_TRACE_LIST_EVENT_LIST);
 	mutex_lock(&ctx->event_mutex);
 	list_add_tail(&atom->dep_item[0], &ctx->event_list);
 	mutex_unlock(&ctx->event_mutex);

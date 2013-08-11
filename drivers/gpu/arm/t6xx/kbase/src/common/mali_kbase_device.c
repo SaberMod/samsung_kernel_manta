@@ -55,6 +55,9 @@ STATIC void kbasep_trace_hook_wrapper(void *param);
 STATIC void kbasep_trace_debugfs_init(kbase_device *kbdev);
 #endif
 
+STATIC mali_error kbasep_list_trace_init( kbase_device *kbdev );
+STATIC void kbasep_list_trace_term( kbase_device *kbdev );
+
 void kbasep_as_do_poke(struct work_struct *work);
 enum hrtimer_restart kbasep_reset_timer_callback(struct hrtimer *data);
 void kbasep_reset_timeout_worker(struct work_struct *data);

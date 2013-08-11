@@ -257,6 +257,11 @@ static INLINE int kbase_jd_atom_id(kbase_context *kctx, kbase_jd_atom *katom)
 	return result;
 }
 
+void kbasep_list_trace_add(u8 tracepoint_id, kbase_device *kbdev, kbase_jd_atom *katom,
+		osk_dlist *list_id, mali_bool action, u8 list_type);
+
+void kbasep_list_trace_dump(kbase_device *kbdev);
+
 #if KBASE_TRACE_ENABLE != 0
 /** Add trace values about a job-slot
  *
